@@ -2,7 +2,9 @@ import math
 import random
 
 def shor(n):
-    while True:
+    found = False
+
+    while not found:
         a = random.randint(1, n-1)
         gcd = math.gcd(a, n)
 
@@ -14,11 +16,12 @@ def shor(n):
         if r % 2 == 1 or a**(r/2) % n == n-1:
             continue
         
+        found = True
         factor = math.gdc(a**(r/2)+1, n)
-        if n % factor == 0:
-            return factor
-        else:
-            return math.gcd(a**(r/2)-1, n)
+        if n % factor != 0:
+            factor = math.gcd(a**(r/2)-1, n)
+
+    return factor
 
 #TODO
 def shor_quantum(n):
