@@ -10,17 +10,16 @@ def shor(n):
         gcd = math.gcd(a, n)
 
         if gcd != 1:
-            return gcd
+        	found = True
+        	factor = gcd
 
         r = shor_quantum(n, a)
 
-        if r % 2 == 1 or a**(r/2) % n == n-1:
-            continue
-        
-        found = True
-        factor = math.gdc(a**(r/2)+1, n)
-        if n % factor != 0:
-            factor = math.gcd(a**(r/2)-1, n)
+        if r % 2 != 1 and a**(r/2) % n != n-1:
+        	found = True
+        	factor = math.gdc(a**(r/2)+1, n)
+        	if n % factor != 0:
+            	factor = math.gcd(a**(r/2)-1, n)
 
     return factor
 
