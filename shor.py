@@ -1,6 +1,5 @@
 import math
 import random
-import numpy as np
 
 def shor(n):
     while True:
