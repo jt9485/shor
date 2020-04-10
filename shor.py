@@ -1,5 +1,6 @@
 import math
 import random
+import numpy as np
 
 def shor(n):
     found = False
@@ -25,4 +26,6 @@ def shor(n):
 
 #TODO
 def shor_quantum(n):
+    sz = math.ceil(math.log2(n))
+    register = np.empty(sz, dtype='O')
     pass
