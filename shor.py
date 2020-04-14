@@ -35,15 +35,19 @@ def shor(n):
     return factor
 
 #TODO
-def shor_quantum(N, x, t):
+def shor_quantum(N, X):
+	foundagain = False
+	measure=1
+	x=X
+	while not foundagain:
     n = math.ceil(math.log2(N))
-
+    t = math.ceil(math.log2(N**2))
     # phi_0 = |0...0>
     reg_sz = t+n
     reg_num_states = 1
 
     # phi_1 = \frac{1}{\sqrt{2^t}} \sum_{j=0}^{2^t-1}|j>|0>
-    reg_num_states = 2 ** t
+    reg_num_states = 2**t
 
     # phi_2 = \frac{1}{\sqrt{2^t}} \sum_{j=0}^{2^t-1}|j>|x^j \Mod{N}>
 
@@ -76,8 +80,27 @@ def shor_quantum(N, x, t):
 
         # TODO sum != 1, maybe wrong coefficients
         new_prob[k] = (c * c.conjugate()).real / (2**t * reg_num_states)
+        # Making more clear where there are values with probability different from zero (peacks to j)
+        if math.ceil(1 / new_prob[k]) == 0:
+        	new_prob[k]=0
+
 
     # phi_5 after measuring all qubits
-    measure = np.random.choice(range(2**t), p=prob)
+
+    #Defining numerator
+    up=0
+    while up==0:
+    	up = np.random.choice(range(2**t), p=new_prob)
+
+    
+    r = math.ceil(2**t / up)
+    
+    measure = measure * r
+    
+    if power_mod(x,measure,N)!=1
+    	x=x**measure
+    else
+    	foundagain=True
+
 
     return measure
