@@ -51,24 +51,33 @@ def shor_quantum(N, x, t):
 
     # Measure
     j = random.randint(0, 2**t-1)
-    x_b = powermod(x, j, N)
-    prob = np.empty(reg_num_states, dtype=np.double)
+    x_b = power_mod(x, j, N)
+    prob = np.empty(2**t, dtype=np.double)
 
     # probability not equal anymore
     reg_num_states = 0
     for j in range(2**t):
-        if x_b == powermod(x, j, N):
+        if x_b == power_mod(x, j, N):
             reg_num_states += 1
 
     for j in range(2**t):
-        if x_b == powermod(x, j, N):
+        if x_b == power_mod(x, j, N):
             prob[j] = 1 / reg_num_states
         else:
             prob[j] = 0
 
     # phi_4 apply reverse DFT
+    new_prob = np.zeros(2**t, dtype=np.double)
+    for k in range(2**t):
+        c = np.complex(0)
+        for j in range(2**t):
+            theta = -2*math.pi *k*j / 2**t
+            c += prob[j] * np.complex(math.cos(theta), math.sin(theta))
+
+        # TODO sum != 1, maybe wrong coefficients
+        new_prob[k] = (c * c.conjugate()).real / (2**t * reg_num_states)
 
     # phi_5 after measuring all qubits
-    measure = numpy.random.choice(range(2**t), p=prob)
+    measure = np.random.choice(range(2**t), p=prob)
 
     return measure
