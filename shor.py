@@ -17,31 +17,29 @@ def shor(n):
     found = False
 
     while not found:
-        a = random.randint(1, n-1)
-        gcd = math.gcd(a, n)
+        x = random.randint(2, n-1)
+        gcd = math.gcd(x, n)
 
         if gcd != 1:
-        	found = True
-        	factor = gcd
+            found = True
+            factor = gcd
 
-        measure = shor_quantum(n, a)
+        r = shor_quantum(n, x)
 
         #TODO extract the denominator
 
-        if r % 2 != 1 and a**(r/2) % n != n-1:
-        	found = True
-        	factor = math.gdc(a**(r/2)+1, n)
+        if r % 2 == 0 and x**(r/2) % n != n-1:
+            found = True
+            factors = [math.gdc(y, n) for y in [x**(r/2) - 1, x**(r/2) + 1]]
 
-    return factor
+    return factors
 
 #TODO
-def shor_quantum(N, X):
-	foundagain = False
-	measure=1
-	x=X
-	while not foundagain:
+def shor_quantum(N, x):
+    order = 1
     n = math.ceil(math.log2(N))
     t = math.ceil(math.log2(N**2))
+
     # phi_0 = |0...0>
     reg_sz = t+n
     reg_num_states = 1
@@ -78,29 +76,23 @@ def shor_quantum(N, X):
             theta = -2*math.pi *k*j / 2**t
             c += prob[j] * np.complex(math.cos(theta), math.sin(theta))
 
-        # TODO sum != 1, maybe wrong coefficients
-        new_prob[k] = (c * c.conjugate()).real / (2**t * reg_num_states)
-        # Making more clear where there are values with probability different from zero (peacks to j)
-        if math.ceil(1 / new_prob[k]) == 0:
-        	new_prob[k]=0
-
+    # TODO sum != 1, maybe wrong coefficients
+    new_prob[k] = (c * c.conjugate()).real / (2**t * reg_num_states)
 
     # phi_5 after measuring all qubits
 
-    #Defining numerator
-    up=0
-    while up==0:
-    	up = np.random.choice(range(2**t), p=new_prob)
+    measure = 0
+    while measure == 0:
+        mesure = np.random.choice(range(2**t), p=new_prob)
 
+    # continued fractions
+    a0 = math.floor(2**t / measure)
     
-    r = math.ceil(2**t / up)
+    r = r * a0
     
-    measure = measure * r
-    
-    if power_mod(x,measure,N)!=1
-    	x=x**measure
+    if power_mod(x, r, N) != 1
+        x = x**r
     else
-    	foundagain=True
+        found = True
 
-
-    return measure
+    return order
