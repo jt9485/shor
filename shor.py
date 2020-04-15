@@ -13,16 +13,32 @@ def power_mod(a, exp, m):
 
     return c
 
-def shor(n):
-    found = False
+def DFT(prob, n_states):
+    new_prob = np.empty(n_states, dtype=np.double)
+    for k in range(n_states):
+        c = np.complex()
+        for j in range(n_states):
+            theta = -2*math.pi*k*j / n_states
+            c += math.sqrt(prob[j]) * np.complex(math.cos(theta), math.sin(theta))
 
+        new_prob[k] = (c * c.conjugate()).real / n_states
+
+    return new_prob
+
+def shor(n):
+    #TODO filter powers of odd primes
+
+    while n % 2 == 0:
+        n /= 2
+
+    found = False
     while not found:
         x = random.randint(2, n-1)
         gcd = math.gcd(x, n)
 
         if gcd != 1:
             found = True
-            factor = gcd
+            factors = [gcd, n / gcd]
 
         r = shor_quantum(n, x)
 
@@ -69,30 +85,20 @@ def shor_quantum(N, x):
             prob[j] = 0
 
     # phi_4 apply reverse DFT
-    new_prob = np.zeros(2**t, dtype=np.double)
-    for k in range(2**t):
-        c = np.complex(0)
-        for j in range(2**t):
-            theta = -2*math.pi *k*j / 2**t
-            c += prob[j] * np.complex(math.cos(theta), math.sin(theta))
-
-    # TODO sum != 1, maybe wrong coefficients
-    new_prob[k] = (c * c.conjugate()).real / (2**t * reg_num_states)
+    prob = DTF(prob, 2**t)
 
     # phi_5 after measuring all qubits
 
-    measure = 0
-    while measure == 0:
-        mesure = np.random.choice(range(2**t), p=new_prob)
+    measure = np.random.choice(range(2**t), p=prob)
 
     # continued fractions
     a0 = math.floor(2**t / measure)
     
     r = r * a0
     
-    if power_mod(x, r, N) != 1
+    if power_mod(x, r, N) != 1:
         x = x**r
-    else
+    else:
         found = True
 
     return order
