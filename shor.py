@@ -2,6 +2,14 @@ import math
 import random
 import numpy as np
 
+def is_prime_power(n):
+    m = math.ceil(math.log(n) / math.log(2))
+    for i in range(1, m):
+        root = math.pow(n, 1.0 / (i+1))
+        if root == math.floor(root):
+            return True
+    return False
+
 def power_mod(a, exp, m):
     c = 1
     while exp > 0:
