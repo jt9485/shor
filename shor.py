@@ -34,7 +34,8 @@ def DFT(prob, n_states):
     return new_prob
 
 def shor(n):
-    #TODO filter powers of odd primes
+    if is_prime_power(n):
+        raise Exception("n cannot be a power of a prime")
 
     while n % 2 == 0:
         n /= 2
