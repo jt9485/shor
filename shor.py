@@ -1,6 +1,17 @@
 import math
 import random
+import matplotlib.pyplot as plt
+from fractions import Fraction
+
 import numpy as np
+
+def is_prime(n):
+    d = 2
+    while d*d < n:
+        if n%d == 0:
+            return False
+        d += 1
+    return True
 
 def is_prime_power(n):
     m = math.ceil(math.log(n) / math.log(2))
@@ -34,80 +45,123 @@ def DFT(prob, n_states):
     return new_prob
 
 def shor(n):
+    if is_prime(n):
+        raise Exception("n must be a composite number")
+
     if is_prime_power(n):
         raise Exception("n cannot be a power of a prime")
-
-    while n % 2 == 0:
-        n /= 2
 
     found = False
     while not found:
         x = random.randint(2, n-1)
         gcd = math.gcd(x, n)
 
+        print(x)
         if gcd != 1:
             found = True
-            factors = [gcd, n / gcd]
+            factors = [gcd, n // gcd]
 
-        r = shor_quantum(n, x)
+        r = get_order(x, n)
 
-        #TODO extract the denominator
+        print("R")
 
-        if r % 2 == 0 and x**(r/2) % n != n-1:
+        if r % 2 == 0 and x**(r/2) != n-1:
             found = True
-            factors = [math.gdc(y, n) for y in [x**(r/2) - 1, x**(r/2) + 1]]
+            r = r // 2
+            factors = [math.gcd(y, n) for y in [x**r - 1, x**r + 1]]
 
     return factors
 
-#TODO
-def shor_quantum(N, x):
-    order = 1
-    n = math.ceil(math.log2(N))
-    t = math.ceil(math.log2(N**2))
+def get_order(x, n):
+    # Quantum
+    t = math.floor(2 * math.log2(n)) + 1
+    n_states = 2**t
 
-    # phi_0 = |0...0>
-    reg_sz = t+n
-    reg_num_states = 1
+    r = 1
+    while x != 1 and r < n:
+        m = 0
+        while m == 0:
+            m = quantum(x, n, n_states)
 
-    # phi_1 = \frac{1}{\sqrt{2^t}} \sum_{j=0}^{2^t-1}|j>|0>
-    reg_num_states = 2**t
+        # first term of the continued fractions
+        coef = []
+        f = Fraction(m, n_states)
+        while f != 0:
+            f = 1 / f
+            i = int(f)
+            f = f - i
+            coef.append(i)
 
-    # phi_2 = \frac{1}{\sqrt{2^t}} \sum_{j=0}^{2^t-1}|j>|x^j \Mod{N}>
+        convergents = [Fraction(1,1)]
+        for last in range(len(coef)):
+            c = Fraction(1,coef[last])
+            for idx in reversed(range(last)):
+                c += Fraction(coef[idx], 1)
+                c = 1 / c
+            convergents.append(c)
 
-    # phi_3 after measuring second register
+        f = 1
+        for c in convergents:
+            if c.denominator < n:
+                f = c.denominator
 
-    # Measure
-    j = random.randint(0, 2**t-1)
-    x_b = power_mod(x, j, N)
-    prob = np.empty(2**t, dtype=np.double)
+        x = (x ** f) % n
+        r *= f
 
-    # probability not equal anymore
-    reg_num_states = 0
-    for j in range(2**t):
-        if x_b == power_mod(x, j, N):
-            reg_num_states += 1
+        print(m, f)
+        print( x, r)
 
-    for j in range(2**t):
-        if x_b == power_mod(x, j, N):
-            prob[j] = 1 / reg_num_states
+    return r
+
+def quantum(x, n, n_states):
+    p = np.empty(n_states, dtype=np.double)
+
+    # phi_0 and phi_2 are only used for demonstrating the usage
+    p = phi_1(p, n_states)
+    p = phi_3(p, n_states, x, n)
+    p = phi_4(p, n_states)
+
+    measure = np.random.choice(range(n_states), p=p)
+    return measure
+
+def phi_0(p, n_states):
+    p.fill(0)
+    p[0] = 1
+    return p
+
+def phi_1(p, n_states):
+    p.fill(1 / n_states)
+    return p
+
+def phi_2(x, n, p, n_states):
+    freq_powers = np.zeros(n, dtype=np.double)
+
+    power = 1
+    for j in range(n_states):
+        freq_powers[power] += prob[j]
+        power = (power * x) % n
+
+    return freq_powers
+
+def phi_3(p, n_states, x, n):
+    random_j = random.randint(0, n_states-1)
+    x_b = power_mod(x, random_j, n)
+
+    cnt = 0
+    power = 1
+    for j in range(n_states):
+        if x_b == power:
+            cnt += 1
+        power = (power * x) % n
+
+    power = 1
+    for j in range(n_states):
+        if x_b == power:
+            p[j] = 1 / cnt
         else:
-            prob[j] = 0
+            p[j] = 0
+        power = (power * x) % n
+    return p
 
-    # phi_4 apply reverse DFT
-    prob = DTF(prob, 2**t)
-
-    # phi_5 after measuring all qubits
-
-    measure = np.random.choice(range(2**t), p=prob)
-
-    # continued fractions
-    a0 = math.floor(2**t / measure)
-    
-    r = r * a0
-    
-    if power_mod(x, r, N) != 1:
-        x = x**r
-    else:
-        found = True
-
-    return order
+def phi_4(p, n_states):
+    return DFT(p, n_states)
