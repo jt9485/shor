@@ -56,24 +56,18 @@ def shor(n):
         x = random.randint(2, n-1)
         gcd = math.gcd(x, n)
 
-        print(x)
         if gcd != 1:
             found = True
-            factors = [gcd, n // gcd]
+            return [gcd, n // gcd]
 
         r = get_order(x, n)
-
-        print("R")
 
         if r % 2 == 0 and x**(r/2) != n-1:
             found = True
             r = r // 2
-            factors = [math.gcd(y, n) for y in [x**r - 1, x**r + 1]]
-
-    return factors
+            return [math.gcd(y, n) for y in [x**r - 1, x**r + 1]]
 
 def get_order(x, n):
-    # Quantum
     t = math.floor(2 * math.log2(n)) + 1
     n_states = 2**t
 
@@ -107,9 +101,6 @@ def get_order(x, n):
 
         x = (x ** f) % n
         r *= f
-
-        print(m, f)
-        print( x, r)
 
     return r
 
