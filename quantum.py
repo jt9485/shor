@@ -1,10 +1,8 @@
 import math
 import random
-import matplotlib.pyplot as plt
-from fractions import Fraction
 
-import numpy as np
 import classical
+import numpy as np
 
 def quantum(x, n, n_states):
     p = np.empty(n_states, dtype=np.double)

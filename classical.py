@@ -1,8 +1,6 @@
 import math
 from fractions import Fraction
 
-import numpy as np
-
 def is_prime(n):
     d = 2
     while d*d < n:

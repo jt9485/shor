@@ -1,9 +1,6 @@
 import math
 import random
-import matplotlib.pyplot as plt
-from fractions import Fraction
 
-import numpy as np
 import classical
 from quantum import quantum
 
