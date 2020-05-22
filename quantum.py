@@ -4,20 +4,9 @@ import matplotlib.pyplot as plt
 from fractions import Fraction
 
 import numpy as np
+import classical
 
-def DFT(prob, n_states):
-    new_prob = np.empty(n_states, dtype=np.double)
-    for k in range(n_states):
-        c = np.complex()
-        for j in range(n_states):
-            theta = -2*math.pi*k*j / n_states
-            c += math.sqrt(prob[j]) * np.complex(math.cos(theta), math.sin(theta))
-
-        new_prob[k] = (c * c.conjugate()).real / n_states
-
-    return new_prob
-
-def get_order(x, n, n_states):
+def quantum(x, n, n_states):
     p = np.empty(n_states, dtype=np.double)
 
     # phi_0 and phi_2 are only used for demonstrating the usage
@@ -49,7 +38,7 @@ def phi_2(x, n, p, n_states):
 
 def phi_3(p, n_states, x, n):
     random_j = random.randint(0, n_states-1)
-    x_b = power_mod(x, random_j, n)
+    x_b = classical.power_mod(x, random_j, n)
 
     cnt = 0
     power = 1
@@ -69,3 +58,15 @@ def phi_3(p, n_states, x, n):
 
 def phi_4(p, n_states):
     return DFT(p, n_states)
+
+def DFT(prob, n_states):
+    new_prob = np.empty(n_states, dtype=np.double)
+    for k in range(n_states):
+        c = np.complex()
+        for j in range(n_states):
+            theta = -2*math.pi*k*j / n_states
+            c += math.sqrt(prob[j]) * np.complex(math.cos(theta), math.sin(theta))
+
+        new_prob[k] = (c * c.conjugate()).real / n_states
+
+    return new_prob

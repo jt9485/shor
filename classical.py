@@ -29,19 +29,23 @@ def power_mod(a, exp, m):
 
     return c
 
-def get_denominators(f):
+def get_convergents(a, b):
+    if a == 0:
+        raise Exception("a must not be 0")
+
     coef = []
+    f = Fraction(a, b)
     while f != 0:
         f = 1 / f
         coef.append(int(f))
         f -= int(f)
 
     convergents = [Fraction(1,1)]
-    for last in range(len(coef)):
-        c = Fraction(1, coef[last])
-        for idx in reversed(range(last)):
-            c += Fraction(coef[idx], 1)
+    for idx, x in enumerate(coef):
+        c = Fraction(1, x)
+        for y in reversed(coef[:idx]):
+            c += Fraction(y, 1)
             c = 1 / c
         convergents.append(c)
 
-    return [c.denominator for c in convergents]
+    return convergents
