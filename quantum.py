@@ -9,7 +9,7 @@ def quantum(x, n, n_states):
 
     # phi_0 and phi_2 are only used for demonstrating the usage
     p = phi_1(p, n_states)
-    p = phi_3(p, n_states, x, n)
+    p = phi_3(x, n, p, n_states)
     p = phi_4(p, n_states)
 
     measure = np.random.choice(range(n_states), p=p)
@@ -29,12 +29,12 @@ def phi_2(x, n, p, n_states):
 
     power = 1
     for j in range(n_states):
-        freq_powers[power] += prob[j]
+        freq_powers[power] += p[j]
         power = (power * x) % n
 
     return freq_powers
 
-def phi_3(p, n_states, x, n):
+def phi_3(x, n, p, n_states):
     random_j = random.randint(0, n_states-1)
     x_b = classical.power_mod(x, random_j, n)
 

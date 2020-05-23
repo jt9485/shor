@@ -31,6 +31,9 @@ def get_convergents(a, b):
     if a == 0:
         raise Exception("a must not be 0")
 
+    if b == 0:
+        raise Exception("😠")
+
     coef = []
     f = Fraction(a, b)
     while f != 0:

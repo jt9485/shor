@@ -40,10 +40,10 @@ def get_order(x, n):
         m = quantum(x, n, n_states)
 
         while m == 0:
-            print("[F] - measured 0")
+            print("[F] : MEASURED : 0")
             m = quantum(x, n, n_states)
 
-        print("[T] measured {}".format(m))
+        print("[T] : MEASURED : {}".format(m))
         convergents = classical.get_convergents(m, n_states)
 
         d = 1
