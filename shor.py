@@ -25,9 +25,15 @@ def shor(n):
 
         if r % 2 == 0:
             y = classical.power_mod(x, r // 2, n)
-            if y != n-1:
+            d1, d2 = math.gcd(y+1, n), math.gcd(y-1, n)
+
+            if n % d1 == True:
                 found = True
-                return [math.gcd(y+1, n), math.gcd(y-1, n)]
+                return [d1, n // d1]
+
+            if n % d2 == True:
+                found = True
+                return [d2, n // d2]
 
 def get_order(x, n):
     t = math.floor(2 * math.log2(n)) + 1
