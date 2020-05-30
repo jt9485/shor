@@ -23,7 +23,8 @@ def shor(n):
 
         r = get_order(x, n)
 
-        if r == -1:
+        if r == None:
+            print("Quantum part failed")
             continue
 
         if r % 2 == 0:
@@ -45,7 +46,7 @@ def get_order(x, n):
     print("[T] : MEASURED : {}".format(m))
     convergents = classical.get_convergents(m, n_states)
 
-    r = -1
+    r = None
     for c in convergents:
         if c.denominator < n:
             d = c.denominator
