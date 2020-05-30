@@ -37,17 +37,16 @@ def shor(n):
 
 def get_order(x, n):
     t = math.floor(2 * math.log2(n)) + 1
-    n_states = 2**t
 
     print("-------------------->\nget_order: x={}, n={}".format(x, n))
 
     r = 1
     while x != 1 and r < n:
-        m = quantum(x, n, n_states)
+        m = quantum(x, n, t)
 
         while m == 0:
             print("[F] : MEASURED : 0")
-            m = quantum(x, n, n_states)
+            m = quantum(x, n, t)
 
         print("[T] : MEASURED : {}".format(m))
         convergents = classical.get_convergents(m, n_states)
