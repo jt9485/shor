@@ -23,41 +23,34 @@ def shor(n):
 
         r = get_order(x, n)
 
+        if r == -1:
+            continue
+
         if r % 2 == 0:
             y = classical.power_mod(x, r // 2, n)
-            d1, d2 = math.gcd(y+1, n), math.gcd(y-1, n)
-
-            if n % d1 == True:
-                found = True
-                return [d1, n // d1]
-
-            if n % d2 == True:
-                found = True
-                return [d2, n // d2]
+            if y != n-1:
+                return [math.gcd(y+1, n), math.gcd(y-1, n)]
 
 def get_order(x, n):
     t = math.floor(2 * math.log2(n)) + 1
 
     print("-------------------->\nget_order: x={}, n={}".format(x, n))
 
-    r = 1
-    while x != 1 and r < n:
+    m = quantum(x, n, t)
+
+    while m == 0:
+        print("[F] : MEASURED : 0")
         m = quantum(x, n, t)
 
-        while m == 0:
-            print("[F] : MEASURED : 0")
-            m = quantum(x, n, t)
+    print("[T] : MEASURED : {}".format(m))
+    convergents = classical.get_convergents(m, n_states)
 
-        print("[T] : MEASURED : {}".format(m))
-        convergents = classical.get_convergents(m, n_states)
+    r = -1
+    for c in convergents:
+        if c.denominator < n:
+            d = c.denominator
 
-        d = 1
-        for c in convergents:
-            if c.denominator < n:
-                d = c.denominator
+    if classical.power_mod(x, d, n) == 1:
+        r = d
 
-        x = classical.power_mod(x, d, n)
-        r *= d
-
-    print("Estimated r: {}".format(r))
     return r
