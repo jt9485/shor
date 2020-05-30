@@ -3,7 +3,7 @@ from fractions import Fraction
 
 def is_prime(n):
     d = 2
-    while d*d < n:
+    while d*d <= n:
         if n%d == 0:
             return False
         d += 1
@@ -11,16 +11,18 @@ def is_prime(n):
 
 def is_prime_power(n):
     m = math.ceil(math.log(n) / math.log(2))
+
     for i in range(1, m):
         root = math.pow(n, 1.0 / (i+1))
         if root == math.floor(root):
-            return True
+            if is_prime(math.floor(root)):
+                return True
     return False
 
 def power_mod(a, exp, m):
     c = 1
     while exp > 0:
-        if exp % 2:
+        if exp % 2 != 0:
             c = (c*a) % m
         a = (a*a) % m
         exp = exp // 2
@@ -32,7 +34,7 @@ def get_convergents(a, b):
         raise Exception("a must not be 0")
 
     if b == 0:
-        raise Exception("😠")
+        raise Exception("0 division is forbidden")
 
     coef = []
     f = Fraction(a, b)
