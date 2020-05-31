@@ -45,7 +45,7 @@ def is_prime_power(n):
 # _____________
 # | power_mod |
 # -------------
-# Given three natural numbers a, exp and m returns a^b \divmod m
+# Given three natural numbers a, exp and m returns a^b mod m
 
 def power_mod(a, exp, m):
     c = 1
@@ -61,7 +61,7 @@ def power_mod(a, exp, m):
 # | get_coeficients |
 # -------------------
 # 
-# Given two natural numbers a and b returns the cotinue fraction as a list of
+# Given two natural numbers a and b returns the continued fraction as a list of
 # integers
 
 def get_coeficients(a, b):
