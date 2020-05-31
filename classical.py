@@ -78,8 +78,8 @@ def get_coeficients(a, b):
 # ___________________
 # | get_convergents |
 # -------------------
-# Given a continued fraction as a list of integers will return a list of 
-# convergents, per the continued fractions method
+# Given a continued fraction as a non empty list of integers will return a list
+# of convergents, per the continued fractions method
 
 def get_convergents(coef):
     convergents = []
