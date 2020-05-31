@@ -82,13 +82,12 @@ def get_coeficients(a, b):
 # convergents, per the continued fractions method
 
 def get_convergents(coef):
-    n = len(coef)
     convergents = []
 
     p0, q0 = coef[0], 1
     convergents.append(Fraction(p0, q0))
 
-    if n == 1:
+    if len(coef) == 1:
         return convergents
 
     p1, q1 = coef[0]*coef[1] + 1, coef[1]

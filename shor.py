@@ -33,7 +33,7 @@ def shor(n):
 
         if r % 2 == 0:
             y = classical.power_mod(x, r // 2, n)
-            if y != n-1:
+            if y != n-1 and y != 1:
                 return [math.gcd(y+1, n), math.gcd(y-1, n)]
 
 # _____________
@@ -44,7 +44,7 @@ def shor(n):
 # Note: it is not guaranteed that this function will find the actual order of x
 
 def get_order(x, n):
-    t = math.floor(2 * math.log2(n)) + 1
+    t = math.floor(2 * math.log2(n)) + 1 # so that N^2 <= 2^t < 2*N^2
 
     print("-------------------->\nget_order: x={}, n={}".format(x, n))
 
