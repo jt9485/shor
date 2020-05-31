@@ -61,14 +61,13 @@ def power_mod(a, exp, m):
     return c
 
 # ___________________
-# | get_convergents |
+# | get_coeficients |
 # -------------------
-# Given two natural numbers a and b will return a list of convergents, per the
-# continued fractions method, to \frac{a}{b}
-# -----------------------------------------------------------------------------
-# Note: both numbers are supposed to be positive with a < b
+# 
+# Given two natural numbers a and b returns the cotinue fraction as a list of
+# integers
 
-def get_convergents(a, b):
+def get_coeficients(a, b):
     if a == 0:
         raise Exception("a must not be 0")
 
@@ -76,18 +75,28 @@ def get_convergents(a, b):
         raise Exception("0 division is forbidden")
 
     coef = []
-    f = Fraction(a, b)
-    while f != 0:
-        f = 1 / f
-        coef.append(int(f))
-        f -= int(f)
+    while b != 0:
+        coef.append(a // b)
+        a, b = b, a % b
 
-    convergents = [Fraction(1,1)]
-    for idx, x in enumerate(coef):
-        c = Fraction(1, x)
-        for y in reversed(coef[:idx]):
-            c += Fraction(y, 1)
-            c = 1 / c
-        convergents.append(c)
+    return coef
+
+# ___________________
+# | get_convergents |
+# -------------------
+# Given a continued fraction as a list of integers will return a list of 
+# convergents, per the continued fractions method
+
+def get_convergents(coef):
+    p0, q0 = coef[0], 1
+    p1, q1 = coef[0]*coef[1] + 1, coef[1]
+
+    convergents = [Fraction(p0, q0), Fraction(p1, q1)]
+
+    n = len(coef)
+    for c in coef[2:]:
+        p0, p1 = p1, c*p1 + p0
+        q0, q1 = q1, c*q1 + q0
+        convergents.append(Fraction(p1, q1))
 
     return convergents
