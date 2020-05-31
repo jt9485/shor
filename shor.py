@@ -27,11 +27,7 @@ def shor(n):
 
         r = get_order(x, n)
 
-        if r == None:
-            print("Quantum part failed")
-            continue
-
-        if r % 2 == 0:
+        if r != None and r % 2 == 0:
             y = classical.power_mod(x, r // 2, n)
             if y != n-1 and y != 1:
                 return [math.gcd(y+1, n), math.gcd(y-1, n)]
