@@ -7,9 +7,13 @@ import numpy as np
 # ___________
 # | quantum |
 # -----------
-# Given x and natural coprime numbers and t the number qubits on the first
+# Given x and n natural coprime numbers and t the number of qubits on the first
 # register performs the quantum part of the shor algorithm and returns the
 # measured value theta
+# -----------------------------------------------------------------------------
+# Note: All the notation has been borrowed from the initial paper by C. Lavor,
+# L.R.U Manssur and R. Portugal "Shor’s Algorithm for Factoring Large Integers"
+
 
 def quantum(x, n, t):
     n_states = 2 ** t
@@ -30,13 +34,13 @@ def psi_0(p, n_states):
     return p
 
 # STAGE psi_1 : application of Hadamard operator, all possible 2^t states upon
-# measurement on the first register are equaly probable
+# measurement on the first register are equally probable
 def psi_1(p, n_states):
     p.fill(1 / n_states)
     return p
 
-# STAGE psi_2 : applies the linear operator V_x : |j|k> >--> |j|k+x^j \divmod n>
-# to the register therefore calculating the 2**t first powers of x \divmod n
+# STAGE psi_2 : applies the linear operator V_x : |j|k> >--> |j|k+x^j mod n> to
+# the register therefore calculating the 2^t first powers of x mod n
 def psi_2(x, n, p, n_states):
     freq_powers = np.zeros(n, dtype=np.double)
 
