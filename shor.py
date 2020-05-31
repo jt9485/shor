@@ -41,8 +41,7 @@ def shor(n):
 # -------------
 # Given x, n natural numbers computes ord(x) mod n using quantum
 # ---------------------------------------------------------------
-# Note: it is not guaranteed that this function will find the actual order of
-# x in which case it should return None
+# Note: it is not guaranteed that this function will find the actual order of x
 
 def get_order(x, n):
     t = math.floor(2 * math.log2(n)) + 1
