@@ -37,21 +37,28 @@ def get_order(x, n):
 
     print("-------------------->\nget_order: x={}, n={}".format(x, n))
 
-    m = quantum(x, n, t)
-
-    while m == 0:
-        print("[F] : MEASURED : 0")
+    r = 1
+    while x != 1 and r < n:
         m = quantum(x, n, t)
 
-    print("[T] : MEASURED : {}".format(m))
-    convergents = classical.get_convergents(m, n_states)
+        while m == 0:
+            print("[F] : MEASURED : 0")
+            m = quantum(x, n, t)
 
-    r = None
-    for c in convergents:
-        if c.denominator < n:
-            d = c.denominator
+        print("[T] : MEASURED : {}".format(m))
+        convergents = classical.get_convergents(m, n_states)
 
-    if classical.power_mod(x, d, n) == 1:
-        r = d
+        d = 1
+        for c in convergents:
+            if c.denominator < n:
+                d = c.denominator
 
-    return r
+        x = classical.power_mod(x, d, n)
+        r *= d
+
+    print("Estimated r: {}".format(r))
+
+    if x == 1 and r < n:
+        return r
+
+    return None
