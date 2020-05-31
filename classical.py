@@ -30,11 +30,8 @@ def is_prime(n):
 # If is_prime were polynomial this implemention would also be
 
 def is_prime_power(n):
-    if n == 0:
+    if n < 2:
         return False
-
-    if n == 1:
-        return True
 
     m = math.ceil(math.log(n) / math.log(2))
 
@@ -68,9 +65,6 @@ def power_mod(a, exp, m):
 # integers
 
 def get_coeficients(a, b):
-    if a == 0:
-        raise Exception("a must not be 0")
-
     if b == 0:
         raise Exception("0 division is forbidden")
 
@@ -88,12 +82,18 @@ def get_coeficients(a, b):
 # convergents, per the continued fractions method
 
 def get_convergents(coef):
-    p0, q0 = coef[0], 1
-    p1, q1 = coef[0]*coef[1] + 1, coef[1]
-
-    convergents = [Fraction(p0, q0), Fraction(p1, q1)]
-
     n = len(coef)
+    convergents = []
+
+    p0, q0 = coef[0], 1
+    convergents.append(Fraction(p0, q0))
+
+    if n == 1:
+        return convergents
+
+    p1, q1 = coef[0]*coef[1] + 1, coef[1]
+    convergents.append(Fraction(p1, q1))
+
     for c in coef[2:]:
         p0, p1 = p1, c*p1 + p0
         q0, q1 = q1, c*q1 + q0
