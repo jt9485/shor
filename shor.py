@@ -4,6 +4,12 @@ import random
 import classical
 from quantum import quantum
 
+# ________
+# | shor |
+# --------
+# Given a natural n that is neither prime nor a power of a single prime it
+# find two divisors for it
+
 def shor(n):
     if classical.is_prime(n):
         raise Exception("{} must be a composite number".format(n))
@@ -11,13 +17,11 @@ def shor(n):
     if classical.is_prime_power(n):
         raise Exception("{} cannot be a power of a prime".format(n))
 
-    found = False
-    while not found:
+    while True:
         x = random.randint(2, n-1)
         gcd = math.gcd(x, n)
 
         if gcd != 1:
-            found = True
             print("Lucky find!!")
             return [gcd, n // gcd]
 
@@ -31,6 +35,14 @@ def shor(n):
             y = classical.power_mod(x, r // 2, n)
             if y != n-1:
                 return [math.gcd(y+1, n), math.gcd(y-1, n)]
+
+# _____________
+# | get_order |
+# -------------
+# Given x, n natural numbers computes ord(x) mod n using quantum
+# ---------------------------------------------------------------
+# Note: it is not guaranteed that this function will find the actual order of
+# x in which case it should return None
 
 def get_order(x, n):
     t = math.floor(2 * math.log2(n)) + 1
@@ -46,7 +58,8 @@ def get_order(x, n):
             m = quantum(x, n, t)
 
         print("[T] : MEASURED : {}".format(m))
-        convergents = classical.get_convergents(m, 2 ** t)
+        coeficients = classical.get_coeficients(m, 2**t)
+        convergents = classical.get_convergents(coeficients)
 
         d = 1
         for c in convergents:
