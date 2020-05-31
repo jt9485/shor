@@ -46,7 +46,7 @@ def get_order(x, n):
             m = quantum(x, n, t)
 
         print("[T] : MEASURED : {}".format(m))
-        convergents = classical.get_convergents(m, n_states)
+        convergents = classical.get_convergents(m, 2 ** t)
 
         d = 1
         for c in convergents:
