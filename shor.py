@@ -35,7 +35,7 @@ def shor(n):
 # _____________
 # | get_order |
 # -------------
-# Given x, n natural numbers computes ord(x) mod n using quantum
+# Given x, n coprime natural numbers computes ord(x) mod n using quantum
 # ---------------------------------------------------------------
 # Note: it is not guaranteed that this function will find the actual order of x
 
