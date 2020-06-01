@@ -7,10 +7,13 @@ from quantum import quantum
 # ________
 # | shor |
 # --------
-# Given a natural n that is neither prime nor a power of a single prime it
-# find two divisors for it
+# Given a natural n that is neither even nor prime nor a power of a single 
+# prime it find two divisors for it
 
 def shor(n):
+    if n % 2 == 0:
+        raise Exception("{} must not be even".format(n))
+
     if classical.is_prime(n):
         raise Exception("{} must be a composite number".format(n))
 
